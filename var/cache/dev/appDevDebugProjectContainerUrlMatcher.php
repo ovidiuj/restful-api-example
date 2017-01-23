@@ -105,6 +105,89 @@ class appDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
 
         }
 
+        if (0 === strpos($pathinfo, '/categor')) {
+            // category_list
+            if ($pathinfo === '/categories') {
+                if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
+                    $allow = array_merge($allow, array('GET', 'HEAD'));
+                    goto not_category_list;
+                }
+
+                return array (  '_controller' => 'Rest\\CategoryBundle\\Controller\\CategoryController::indexAction',  '_route' => 'category_list',);
+            }
+            not_category_list:
+
+            if (0 === strpos($pathinfo, '/category')) {
+                // category_get
+                if (preg_match('#^/category/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+                    if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
+                        $allow = array_merge($allow, array('GET', 'HEAD'));
+                        goto not_category_get;
+                    }
+
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'category_get')), array (  '_controller' => 'Rest\\CategoryBundle\\Controller\\CategoryController::findAction',));
+                }
+                not_category_get:
+
+                // category_children
+                if (preg_match('#^/category/(?P<id>[^/]++)/children$#s', $pathinfo, $matches)) {
+                    if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
+                        $allow = array_merge($allow, array('GET', 'HEAD'));
+                        goto not_category_children;
+                    }
+
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'category_children')), array (  '_controller' => 'Rest\\CategoryBundle\\Controller\\CategoryController::childrenAction',));
+                }
+                not_category_children:
+
+                // category_create
+                if ($pathinfo === '/category') {
+                    if ($this->context->getMethod() != 'POST') {
+                        $allow[] = 'POST';
+                        goto not_category_create;
+                    }
+
+                    return array (  '_controller' => 'Rest\\CategoryBundle\\Controller\\CategoryController::createAction',  '_route' => 'category_create',);
+                }
+                not_category_create:
+
+                // category_update
+                if (preg_match('#^/category/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+                    if (!in_array($this->context->getMethod(), array('PUT', 'PATCH'))) {
+                        $allow = array_merge($allow, array('PUT', 'PATCH'));
+                        goto not_category_update;
+                    }
+
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'category_update')), array (  '_controller' => 'Rest\\CategoryBundle\\Controller\\CategoryController::updateAction',));
+                }
+                not_category_update:
+
+                // category_delete
+                if (preg_match('#^/category/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+                    if ($this->context->getMethod() != 'DELETE') {
+                        $allow[] = 'DELETE';
+                        goto not_category_delete;
+                    }
+
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'category_delete')), array (  '_controller' => 'Rest\\CategoryBundle\\Controller\\CategoryController::deleteAction',));
+                }
+                not_category_delete:
+
+            }
+
+        }
+
+        // token
+        if ($pathinfo === '/token') {
+            if ($this->context->getMethod() != 'POST') {
+                $allow[] = 'POST';
+                goto not_token;
+            }
+
+            return array (  '_controller' => 'Rest\\CategoryBundle\\Controller\\TokenController::getAccessTokenAction',  '_route' => 'token',);
+        }
+        not_token:
+
         throw 0 < count($allow) ? new MethodNotAllowedException(array_unique($allow)) : new ResourceNotFoundException();
     }
 }
