@@ -1,0 +1,8 @@
+category_category:
+    resource: "@CategoryBundle/Resources/config/routing/category.yml"
+    prefix:   /
+
+token:
+    path: /token
+    defaults:  { _controller: CategoryBundle:Token:getAccessToken }
+    methods: POST

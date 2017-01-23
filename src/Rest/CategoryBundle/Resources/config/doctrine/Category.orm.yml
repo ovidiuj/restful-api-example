@@ -1,0 +1,35 @@
+Rest\CategoryBundle\Entity\Category:
+  type: entity
+  table: category
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    name:
+      type: string
+    slug:
+      type: string
+    isVisible:
+      type: boolean
+      column: is_visible
+    createdAt:
+      type: datetime
+      column: posted_at
+      gedmo:
+        timestampable:
+          on: create
+    updatedAt:
+      type: datetime
+      column: updated_at
+      gedmo:
+        timestampable:
+          on: update
+  manyToOne:
+    parentCategory:
+      targetEntity: Category
+      joinColumn:
+        name: parent_category_id
+        referencedColumnName: id
+      cascade: ["persist"]

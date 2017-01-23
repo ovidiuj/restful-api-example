@@ -1,17 +1,22 @@
-# Application container
+nginx:
+  build: docker
+  ports:
+    - "81:80"
+  links:
+    - php
+    - redis
+    - db
+  volumes:
+    - ./:/app
+
 php:
-    build: .
-    restart: unless-stopped
-    volumes:
-        - ./:/server/http
-    ports:
-        - "81:80"
-        - "443:443"
-    links:
-        - db
-        - redis
-    environment:
-        DEBUG: 'true'
+  build: php-fpm
+  volumes:
+    - ./:/app
+  working_dir: /app
+  links:
+    - redis
+    - db
 
 redis:
     image: redis
@@ -23,6 +28,8 @@ db:
     image: mysql
     ports:
       - "3307:3306"
+    expose:
+      - "3306"
     environment:
       MYSQL_ROOT_PASSWORD: 123456
       MYSQL_USER: root

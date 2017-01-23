@@ -1,0 +1,4 @@
+services:
+  category.service:
+    class: Rest\CategoryBundle\Service\CategoryService
+    arguments: ["@doctrine.orm.entity_manager", "@validator", "@serializer"]

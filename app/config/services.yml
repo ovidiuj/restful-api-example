@@ -1,9 +1,38 @@
 # Learn more about services, parameters and containers at
 # http://symfony.com/doc/current/service_container.html
 parameters:
-#    parameter_name: value
+  oauth_client_id: "test"
+  oauth_secret: "test"
+  oauth_redirect_url: "/"
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+  oauth_storage:
+    class: 'OAuth2\Storage\Redis'
+    arguments: ["@snc_redis.default"]
+    calls:
+      - [setClientDetails, ["%oauth_client_id%", "%oauth_secret%", "%oauth_redirect_url%"]]
+
+  oauth_memory:
+    class: 'OAuth2\Storage\Memory'
+    arguments: [{'default_scope': 'basic', 'supported_scopes': 'category'}]
+
+  oauth_scope:
+    class: 'OAuth2\Scope'
+    arguments: ["@oauth_memory"]
+
+  oauth_client:
+    class: 'OAuth2\GrantType\ClientCredentials'
+    arguments: ["@oauth_storage"]
+
+  oauth_authorization:
+    class: 'OAuth2\GrantType\AuthorizationCode'
+    arguments: ["@oauth_storage"]
+
+  oauth_server:
+    class: 'OAuth2\Server'
+    arguments: ["@oauth_storage"]
+    calls:
+        - [setScopeUtil, ["@oauth_scope"]]
+        - [addGrantType, ["@oauth_client"]]
+        - [addGrantType, ["@oauth_authorization"]]
+

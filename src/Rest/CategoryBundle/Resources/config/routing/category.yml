@@ -1,0 +1,29 @@
+category_list:
+    path:     /categories
+    defaults: { _controller: "CategoryBundle:Category:index" }
+    methods:  GET
+
+category_get:
+    path:     /category/{id}
+    defaults: { _controller: "CategoryBundle:Category:find" }
+    methods:  GET
+
+category_children:
+    path:     /category/{id}/children
+    defaults: { _controller: "CategoryBundle:Category:children" }
+    methods:  GET
+
+category_create:
+    path:     /category
+    defaults: { _controller: "CategoryBundle:Category:create" }
+    methods:  POST
+
+category_update:
+    path:     /category/{id}
+    defaults: { _controller: "CategoryBundle:Category:update" }
+    methods:  [PUT, PATCH]
+
+category_delete:
+    path:     /category/{id}
+    defaults: { _controller: "CategoryBundle:Category:delete" }
+    methods:  DELETE
