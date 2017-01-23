@@ -16,5 +16,6 @@
 /vendor/
 /vendor/twig
 /web/bundles/
+/logs/
 
 .idea/
