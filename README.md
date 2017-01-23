@@ -1,4 +1,4 @@
-This is a simple project to provide a RESTful API to manage categories for an e-commerce website.
+This is a simple project which provides a Symfony RESTful API to manage categories for an e-commerce website.
 
 The category entity has the following structure:
 ```javascript
